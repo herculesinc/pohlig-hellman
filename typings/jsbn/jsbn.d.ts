@@ -1,5 +1,5 @@
 declare module 'jsbn' {
-    
+
     export class BigInteger {
         constructor(value: string, radix?: number);
 
@@ -17,6 +17,7 @@ declare module 'jsbn' {
 
         gcd(value: BigInteger)      : BigInteger;
         equals(value: BigInteger)   : boolean;
+        isProbablePrime()           : boolean;
 
         bitLength(): number;
         toString(radix?: number): string;

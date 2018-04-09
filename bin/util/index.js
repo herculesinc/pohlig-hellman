@@ -5,4 +5,5 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./primes"));
 __export(require("./keys"));
+__export(require("./biUtil"));
 //# sourceMappingURL=index.js.map

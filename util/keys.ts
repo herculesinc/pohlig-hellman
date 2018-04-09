@@ -1,32 +1,40 @@
 // IMPORTS
 // ================================================================================================
-import * as crypto from 'crypto';
 import { BigInteger } from 'jsbn';
-
-// MODULE VARIABLES
-// ================================================================================================
-const ONE = new BigInteger('1', 10);
+import * as forge from 'node-forge';
+import {bigIntToBuffer, bufferToBigInt, BIG_INT_ONE} from './biUtil';
 
 // PUBLIC FUNCTION
 // ================================================================================================
-export function generateKey(prime: BigInteger, bitLength = 256): Promise<BigInteger> {
+export async function generateKey(prime: Buffer, bitLength = 256): Promise<Buffer> {
     // TODO: validate parameters
 
-    const byteLength = Math.floor(bitLength / 8);
-    return new Promise((resolve, reject) => {
-        crypto.randomBytes(byteLength, (error, buf) => {
-            if (error) {
-                return reject(error);
-            }
+    const randomBytes = Buffer.from( forge.random.getBytesSync(bitLength >> 3) );
 
-            // TODO: make sure a valid key has been generated
+    let key = bufferToBigInt(randomBytes);
 
-            let key = new BigInteger(buf.toString('hex'), 16);
-            if (key.isEven()) {
-                key = key.add(ONE);
-            }
+    if (key.isEven()) {
+        key = key.add(BIG_INT_ONE);
+    }
 
-            resolve(key);
-        });
-    });
+    return bigIntToBuffer(key);
+
+    // return new Promise((resolve, reject) => {
+    //     crypto.randomBytes(byteLength, (error, buf) => {
+    //         if (error) {
+    //             return reject(error);
+    //         }
+    //
+    //         console.log( 'key', buf.toString('hex') )
+    //
+    //         // TODO: make sure a valid key has been generated
+    //
+    //         let key = new BigInteger(buf.toString('hex'), 16);
+    //         if (key.isEven()) {
+    //             key = key.add(ONE);
+    //         }
+    //
+    //         resolve(key);
+    //     });
+    // });
 }
