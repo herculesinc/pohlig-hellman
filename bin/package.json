@@ -1,0 +1,26 @@
+{
+  "name": "pohlig-hellman",
+  "version": "0.1.0",
+  "description": "Pohlig-Hellman cipher for Node.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/herculesinc/pohlig-hellman.git/"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "irakliy",
+    "email": "irakliy81@live.com"
+  },
+  "engines": {
+    "node": "6.13.1"
+  },
+  "devDependencies": {
+    "del": "2.2.x",
+    "gulp": "3.9.x",
+    "gulp-sync": "0.1.x"
+  },
+  "dependencies": {
+    "jsbn": "1.1.X"
+  }
+}

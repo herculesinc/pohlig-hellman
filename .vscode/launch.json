@@ -1,0 +1,20 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch test",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/tests/run.js",
+			"stopOnEntry": false,
+			"cwd": "${workspaceRoot}/bin",
+			"runtimeArgs": [ "--nolazy" ],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"console": "externalTerminal",
+			"sourceMaps": true,
+			"outFiles": ["${workspaceRoot}/bin/**/*.js"]
+		}
+	]
+}
