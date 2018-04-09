@@ -8,14 +8,11 @@ export function bufferToBigInt(buffer: Buffer): BigInteger {
 }
 
 export function bigIntToBuffer(bi: BigInteger): Buffer {
-    let result;
+    let hex = bi.toString(16);
 
-    try {
-        result = Buffer.from(bi.toString(16).toUpperCase(), 'hex');
-    } catch (e) {
-        console.log(bi.toString(16));
-        console.log(e);
+    if (hex.length % 2) {
+        hex = '0' + hex;
     }
 
-    return result;
+    return Buffer.from(hex, 'hex');
 }

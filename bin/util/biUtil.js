@@ -8,15 +8,11 @@ function bufferToBigInt(buffer) {
 }
 exports.bufferToBigInt = bufferToBigInt;
 function bigIntToBuffer(bi) {
-    let result;
-    try {
-        result = Buffer.from(bi.toString(16).toUpperCase(), 'hex');
+    let hex = bi.toString(16);
+    if (hex.length % 2) {
+        hex = '0' + hex;
     }
-    catch (e) {
-        console.log(bi.toString(16));
-        console.log(e);
-    }
-    return result;
+    return Buffer.from(hex, 'hex');
 }
 exports.bigIntToBuffer = bigIntToBuffer;
 //# sourceMappingURL=biUtil.js.map

@@ -18,7 +18,6 @@ async function test() {
 
         // encrypt: data -> e1
         const data = 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. ';
-        console.log(Buffer.from(data).byteLength, Buffer.from(data).length * 8)
         start = Date.now();
         const e1 = c1.encrypt(Buffer.from(data));
         console.log('-'.repeat(100));

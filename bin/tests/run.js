@@ -26,7 +26,6 @@ function test() {
             console.log(`Prime size: ${c1.prime.length * 8}, encryption key size: ${c1.enkey.length * 8}, decryption key size: ${c1.dekey.length * 8}`);
             // encrypt: data -> e1
             const data = 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. ';
-            console.log(Buffer.from(data).byteLength, Buffer.from(data).length * 8);
             start = Date.now();
             const e1 = c1.encrypt(Buffer.from(data));
             console.log('-'.repeat(100));
