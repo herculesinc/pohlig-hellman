@@ -16,7 +16,7 @@ gulp.task( 'clean', cb => {
 } );
 
 gulp.task( 'copy:files', () => {
-  return gulp.src( [ './package.json' ], { base: '.' } )
+  return gulp.src( [ './package.json', './README.md' ], { base: '.' } )
       .pipe( gulp.dest( './bin' ) );
 } );
 
