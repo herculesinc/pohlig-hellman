@@ -17,7 +17,7 @@ const DATA = 'Lorem Ipsum - это текст-"рыба", часто испол�
 const DATA_BUFFER = Buffer.from(DATA);
 let prime, key1, key2, key12;
 let c1, c2, c3, e1, e2, d1, d2, d12;
-mocha_1.describe('tests;', done => {
+mocha_1.describe('tests;', () => {
     mocha_1.before(() => __awaiter(this, void 0, void 0, function* () {
         prime = util.getPrime('modp2048');
         key1 = yield util.generateKey(prime);

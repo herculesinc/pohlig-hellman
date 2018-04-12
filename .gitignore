@@ -1,8 +1,20 @@
+#TypeScript Map Files
+*.map
+
+# Installed modules
+node_modules/
+
+# Compiled Tests
+/bin/tests/
+
+# .npmignore in bin folder
+/bin/.npmignore
+
+# eslint rules
+.eslintrc
+
+# other
 .idea
-
-npm-debug.log*
-node_modules
-
 .DS_Store
 ./**/.DS_Store
-dest/img
+/npm-debug.log
