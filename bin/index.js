@@ -8,18 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// IMPORTS
-// ================================================================================================
-const jsbn_1 = require("jsbn");
 const util = require("./util");
-// MODULE VARIABLES
-// ================================================================================================
-const ONE = new jsbn_1.BigInteger('1', 10);
+const util_1 = require("./util");
 function createCipher(lengthOrGroup) {
     return __awaiter(this, void 0, void 0, function* () {
         let prime;
         if (typeof lengthOrGroup === 'number') {
-            prime = util.generateSafePrime(lengthOrGroup);
+            prime = yield util.generateSafePrime(lengthOrGroup);
         }
         else if (typeof lengthOrGroup === 'string') {
             prime = util.getPrime(lengthOrGroup);
@@ -28,16 +23,16 @@ function createCipher(lengthOrGroup) {
             prime = util.getPrime('modp2048');
         }
         const key = yield util.generateKey(prime);
-        return new Cipher(Buffer.from(prime.toString(16), 'hex'), Buffer.from(key.toString(16), 'hex'));
+        return new Cipher(prime, key);
     });
 }
 exports.createCipher = createCipher;
 function mergeKeys(key1, key2) {
     // TODO: validate parameters
-    const k1 = new jsbn_1.BigInteger(key1.toString('hex'), 16);
-    const k2 = new jsbn_1.BigInteger(key2.toString('hex'), 16);
+    const k1 = util_1.bufferToBigInt(key1);
+    const k2 = util_1.bufferToBigInt(key2);
     const k12 = k1.multiply(k2);
-    return Buffer.from(k12.toString(16), 'hex');
+    return util_1.bigIntToBuffer(k12);
 }
 exports.mergeKeys = mergeKeys;
 // CIPHER DEFINITION
@@ -47,41 +42,44 @@ class Cipher {
     // --------------------------------------------------------------------------------------------
     constructor(prime, enkey) {
         // TODO: validate parameters
-        this.p = new jsbn_1.BigInteger(prime.toString('hex'), 16);
-        this.e = new jsbn_1.BigInteger(enkey.toString('hex'), 16);
-        this.d = this.e.modInverse(this.p.subtract(ONE));
+        this.p = prime;
+        this.biP = util_1.bufferToBigInt(prime);
+        this.e = enkey;
+        this.biE = util_1.bufferToBigInt(enkey);
+        this.biD = this.biE.modInverse(this.biP.subtract(util_1.BIG_INT_ONE));
+        this.d = util_1.bigIntToBuffer(this.biD);
         // TODO: implement validity checking for p, e, and d
     }
     // PUBLIC FUNCTIONS
     // --------------------------------------------------------------------------------------------
     encrypt(data) {
         // TODO: validate parameters
-        const m = new jsbn_1.BigInteger(data.toString('hex'), 16);
-        const c = m.modPow(this.e, this.p);
-        return Buffer.from(c.toString(16), 'hex');
+        const m = util_1.bufferToBigInt(data);
+        const c = m.modPow(this.biE, this.biP);
+        return util_1.bigIntToBuffer(c);
     }
     decrypt(data) {
         // TODO: validate parameters
-        const c = new jsbn_1.BigInteger(data.toString('hex'), 16);
-        const m = c.modPow(this.d, this.p);
-        return Buffer.from(m.toString(16), 'hex');
+        const c = util_1.bufferToBigInt(data);
+        const m = c.modPow(this.biD, this.biP);
+        return util_1.bigIntToBuffer(m);
     }
     clone(keyBitLength) {
         return __awaiter(this, void 0, void 0, function* () {
             const key = yield util.generateKey(this.p, keyBitLength);
-            return new Cipher(this.prime, Buffer.from(key.toString(16), 'hex'));
+            return new Cipher(this.p, key);
         });
     }
     // PUBLIC MEMBERS
     // --------------------------------------------------------------------------------------------
     get prime() {
-        return Buffer.from(this.p.toString(16), 'hex');
+        return this.p;
     }
     get enkey() {
-        return Buffer.from(this.e.toString(16), 'hex');
+        return this.e;
     }
     get dekey() {
-        return Buffer.from(this.d.toString(16), 'hex');
+        return this.d;
     }
 }
 exports.Cipher = Cipher;
