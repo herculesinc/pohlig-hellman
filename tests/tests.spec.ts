@@ -12,7 +12,7 @@ const DATA_BUFFER = Buffer.from(DATA);
 let prime, key1, key2, key12;
 let c1, c2, c3, e1, e2, d1, d2, d12;
 
-describe('tests;', done => {
+describe('tests;', () => {
 
     before(async () => {
         prime = util.getPrime('modp2048');
