@@ -2,7 +2,14 @@
   "name": "pohlig-hellman",
   "version": "0.1.0",
   "description": "Pohlig-Hellman cipher for Node.js",
+  "keywords": [
+    "pohlig",
+    "hellman",
+    "crypto",
+    "encrypt"
+  ],
   "main": "index.js",
+  "typings": "pholig-hellman.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/herculesinc/pohlig-hellman.git/"

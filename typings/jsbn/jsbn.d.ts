@@ -17,7 +17,8 @@ declare module 'jsbn' {
 
         gcd(value: BigInteger)      : BigInteger;
         equals(value: BigInteger)   : boolean;
-        isProbablePrime()           : boolean;
+        compareTo(value: BigInteger): number;
+        isProbablePrime(t: number)  : boolean;
 
         bitLength(): number;
         toString(radix?: number): string;

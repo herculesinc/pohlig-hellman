@@ -2,6 +2,7 @@
 // ================================================================================================
 import * as forge from 'node-forge';
 import {bigIntToBuffer, bufferToBigInt, BIG_INT_ONE, BIG_INT_TWO} from './biUtil';
+import { BigInteger } from 'jsbn';
 
 // INTERFACES
 // ================================================================================================
@@ -47,6 +48,11 @@ export function getPrime(modpGroup: ModpGroup): Buffer {
     }
 
     return prime;
+}
+
+export function isPrime(value: BigInteger): boolean {
+    // TODO: implement
+    return true;
 }
 
 // PRIMES

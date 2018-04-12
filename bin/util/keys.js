@@ -42,4 +42,9 @@ function generateKey(prime, bitLength = 256) {
     });
 }
 exports.generateKey = generateKey;
+function isValidKey(prime) {
+    // TODO: implement
+    return true;
+}
+exports.isValidKey = isValidKey;
 //# sourceMappingURL=keys.js.map

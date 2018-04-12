@@ -12,9 +12,16 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": [
-                "$tsc"
-            ]
+            "problemMatcher": [ "$tsc" ]
+        },
+        {
+            "type": "gulp",
+            "task": "test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [ "$tsc" ]
         }
     ]
 }

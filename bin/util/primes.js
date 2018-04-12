@@ -50,6 +50,11 @@ function getPrime(modpGroup) {
     return prime;
 }
 exports.getPrime = getPrime;
+function isPrime(value) {
+    // TODO: implement
+    return true;
+}
+exports.isPrime = isPrime;
 // PRIMES
 // ================================================================================================
 const PRIMES = {

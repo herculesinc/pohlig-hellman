@@ -38,3 +38,8 @@ export async function generateKey(prime: Buffer, bitLength = 256): Promise<Buffe
     //     });
     // });
 }
+
+export function isValidKey(prime: BigInteger): boolean {
+    // TODO: implement
+    return true;
+}
