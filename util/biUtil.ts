@@ -1,8 +1,14 @@
-import {BigInteger} from 'jsbn';
+// IMPORTS
+// ================================================================================================
+import { BigInteger } from 'jsbn';
 
+// MODULE VARIABLES
+// ================================================================================================
 export const BIG_INT_ONE = new BigInteger('1', 10);
 export const BIG_INT_TWO = new BigInteger('2', 10);
 
+// PUBLIC FUNCTIONS
+// ================================================================================================
 export function bufferToBigInt(buffer: Buffer): BigInteger {
     return new BigInteger(buffer.toString('hex'), 16);
 }

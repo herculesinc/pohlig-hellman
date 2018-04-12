@@ -10,16 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const util = require("./util");
 const util_1 = require("./util");
-function createCipher(lengthOrGroup) {
+function createCipher(groupPrimeOrLength) {
     return __awaiter(this, void 0, void 0, function* () {
         let prime;
-        if (typeof lengthOrGroup === 'number') {
-            prime = yield util.generateSafePrime(lengthOrGroup);
+        if (Buffer.isBuffer(groupPrimeOrLength)) {
+            prime = groupPrimeOrLength;
         }
-        else if (typeof lengthOrGroup === 'string') {
-            prime = util.getPrime(lengthOrGroup);
+        if (typeof groupPrimeOrLength === 'number') {
+            prime = yield util.generateSafePrime(groupPrimeOrLength);
         }
-        else if (lengthOrGroup === null || lengthOrGroup === undefined) {
+        else if (typeof groupPrimeOrLength === 'string') {
+            prime = util.getPrime(groupPrimeOrLength);
+        }
+        else if (groupPrimeOrLength === null || groupPrimeOrLength === undefined) {
             prime = util.getPrime('modp2048');
         }
         const key = yield util.generateKey(prime);
@@ -63,12 +66,6 @@ class Cipher {
         const c = util_1.bufferToBigInt(data);
         const m = c.modPow(this.biD, this.biP);
         return util_1.bigIntToBuffer(m);
-    }
-    clone(keyBitLength) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const key = yield util.generateKey(this.p, keyBitLength);
-            return new Cipher(this.p, key);
-        });
     }
     // PUBLIC MEMBERS
     // --------------------------------------------------------------------------------------------

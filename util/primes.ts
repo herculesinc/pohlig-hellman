@@ -6,11 +6,10 @@ import {bigIntToBuffer, bufferToBigInt, BIG_INT_ONE, BIG_INT_TWO} from './biUtil
 // INTERFACES
 // ================================================================================================
 export type ModpGroup = 'modp2048' | 'modp3072' | 'modp4096' | 'modp6144' | 'modp8192';
-export type PrimeLength = 1024 | 2048 | 3072 | 4096 | 6144 | 8192;
 
 // PUBLIC FUNCTIONS
 // ================================================================================================
-export function generateProbablePrime(bits: PrimeLength): Promise<Buffer> {
+export function generateProbablePrime(bits: number): Promise<Buffer> {
     return new Promise((resolve, reject) => {
         forge.prime.generateProbablePrime(bits, (err, num) => {
             if (err) return reject(err);
@@ -20,7 +19,7 @@ export function generateProbablePrime(bits: PrimeLength): Promise<Buffer> {
     });
 }
 
-export async function generateSafePrime(bits: PrimeLength): Promise<Buffer> {
+export async function generateSafePrime(bits: number): Promise<Buffer> {
     let safePrime, isSafe;
 
     while (!isSafe) {

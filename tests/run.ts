@@ -30,7 +30,7 @@ async function test() {
         console.log(`Decrypted data in ${Date.now() - start} ms; success: ${d1.toString() === data}`);
 
         // encrypted: e1 -> e2
-        const c2 = await c1.clone();
+        const c2 = await ph.createCipher(c1.prime);
         start = Date.now();
         const e2 = c2.encrypt(e1);
         console.log(`Encrypted data in ${Date.now() - start} ms; e2 size is ${e2.length * 8} bits`);

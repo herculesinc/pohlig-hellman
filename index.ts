@@ -1,24 +1,28 @@
 // IMPORTS
 // ================================================================================================
-import {BigInteger} from 'jsbn';
+import { BigInteger } from 'jsbn';
 import * as util from './util';
-import {ModpGroup, PrimeLength, bigIntToBuffer, bufferToBigInt, BIG_INT_ONE} from './util';
+import {ModpGroup, bigIntToBuffer, bufferToBigInt, BIG_INT_ONE} from './util';
 
 // PUBLIC FUNCTIONS
 // ================================================================================================
 export async function createCipher(): Promise<Cipher>;
-export async function createCipher(primeLength: PrimeLength): Promise<Cipher>;
+export async function createCipher(buffer: Buffer): Promise<Cipher>;
+export async function createCipher(primeLength: number): Promise<Cipher>;
 export async function createCipher(modpGroup: ModpGroup): Promise<Cipher>;
-export async function createCipher(lengthOrGroup?: PrimeLength | ModpGroup): Promise<Cipher> {
+export async function createCipher(groupPrimeOrLength?: ModpGroup | Buffer | number): Promise<Cipher> {
 
     let prime: Buffer;
-    if (typeof lengthOrGroup === 'number') {
-        prime = await util.generateSafePrime(lengthOrGroup);
+    if (Buffer.isBuffer(groupPrimeOrLength)) {
+        prime = groupPrimeOrLength;
     }
-    else if (typeof lengthOrGroup === 'string') {
-        prime = util.getPrime(lengthOrGroup);
+    if (typeof groupPrimeOrLength === 'number') {
+        prime = await util.generateSafePrime(groupPrimeOrLength);
     }
-    else if (lengthOrGroup === null || lengthOrGroup === undefined) {
+    else if (typeof groupPrimeOrLength === 'string') {
+        prime = util.getPrime(groupPrimeOrLength);
+    }
+    else if (groupPrimeOrLength === null || groupPrimeOrLength === undefined) {
         prime = util.getPrime('modp2048');
     }
 
@@ -76,11 +80,6 @@ export class Cipher {
         const c = bufferToBigInt(data);
         const m = c.modPow(this.biD, this.biP);
         return bigIntToBuffer(m);
-    }
-
-    async clone(keyBitLength?: number): Promise<Cipher> {
-        const key = await util.generateKey(this.p, keyBitLength);
-        return new Cipher(this.p, key);
     }
 
     // PUBLIC MEMBERS
