@@ -43,9 +43,11 @@ class Cipher {
     constructor(prime, enkey) {
         // TODO: validate parameters
         this.p = prime;
+        this.biP = util_1.bufferToBigInt(prime);
         this.e = enkey;
-        const dKey = this.biEnkey.modInverse(this.biPrime.subtract(util_1.BIG_INT_ONE));
-        this.d = util_1.bigIntToBuffer(dKey);
+        this.biE = util_1.bufferToBigInt(enkey);
+        this.biD = this.biE.modInverse(this.biP.subtract(util_1.BIG_INT_ONE));
+        this.d = util_1.bigIntToBuffer(this.biD);
         // TODO: implement validity checking for p, e, and d
     }
     // PUBLIC FUNCTIONS
@@ -53,13 +55,13 @@ class Cipher {
     encrypt(data) {
         // TODO: validate parameters
         const m = util_1.bufferToBigInt(data);
-        const c = m.modPow(this.biEnkey, this.biPrime);
+        const c = m.modPow(this.biE, this.biP);
         return util_1.bigIntToBuffer(c);
     }
     decrypt(data) {
         // TODO: validate parameters
         const c = util_1.bufferToBigInt(data);
-        const m = c.modPow(this.biDekey, this.biPrime);
+        const m = c.modPow(this.biD, this.biP);
         return util_1.bigIntToBuffer(m);
     }
     clone(keyBitLength) {
@@ -78,15 +80,6 @@ class Cipher {
     }
     get dekey() {
         return this.d;
-    }
-    get biPrime() {
-        return util_1.bufferToBigInt(this.p);
-    }
-    get biEnkey() {
-        return util_1.bufferToBigInt(this.e);
-    }
-    get biDekey() {
-        return util_1.bufferToBigInt(this.d);
     }
 }
 exports.Cipher = Cipher;

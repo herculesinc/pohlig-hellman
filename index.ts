@@ -43,16 +43,22 @@ export class Cipher {
     private e: Buffer;  // encryption key
     private d: Buffer;  // decryption key
 
+    private biP: BigInteger;  // prime
+    private biE: BigInteger;  // encryption key
+    private biD: BigInteger;  // decryption key
+
     // CONSTRUCTOR
     // --------------------------------------------------------------------------------------------
     constructor(prime: Buffer, enkey: Buffer) {
         // TODO: validate parameters
-        this.p = prime;
-        this.e = enkey;
+        this.p   = prime;
+        this.biP = bufferToBigInt(prime);
 
-        const dKey = this.biEnkey.modInverse(this.biPrime.subtract(BIG_INT_ONE));
+        this.e   = enkey;
+        this.biE = bufferToBigInt(enkey);
 
-        this.d = bigIntToBuffer(dKey);
+        this.biD = this.biE.modInverse(this.biP.subtract(BIG_INT_ONE));
+        this.d   = bigIntToBuffer(this.biD);
         // TODO: implement validity checking for p, e, and d
     }
 
@@ -61,14 +67,14 @@ export class Cipher {
     encrypt(data: Buffer): Buffer {
         // TODO: validate parameters
         const m = bufferToBigInt(data);
-        const c = m.modPow(this.biEnkey, this.biPrime);
+        const c = m.modPow(this.biE, this.biP);
         return bigIntToBuffer(c);
     }
 
     decrypt(data: Buffer): Buffer {
         // TODO: validate parameters
         const c = bufferToBigInt(data);
-        const m = c.modPow(this.biDekey, this.biPrime);
+        const m = c.modPow(this.biD, this.biP);
         return bigIntToBuffer(m);
     }
 
@@ -89,17 +95,5 @@ export class Cipher {
 
     get dekey(): Buffer {
         return this.d;
-    }
-
-    get biPrime(): BigInteger {
-        return bufferToBigInt(this.p);
-    }
-
-    get biEnkey(): BigInteger {
-        return bufferToBigInt(this.e);
-    }
-
-    get biDekey(): BigInteger {
-        return bufferToBigInt(this.d);
     }
 }
