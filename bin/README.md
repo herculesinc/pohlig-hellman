@@ -23,7 +23,7 @@ console.log(data === decrypted); // true
 ```
 
 # API
-Full API defintions are available in the [pohlig-hellman.d.ts](https://github.com/herculesinc/pohlig-hellman/blob/master/pholig-hellman.d.ts) file available.
+Full API defintions are available in the [pohlig-hellman.d.ts](https://github.com/herculesinc/pohlig-hellman/blob/master/pohlig-hellman.d.ts) file available.
 
 ## Creating a Cipher
 If you have a prime and an encryption key you'd like to create a cipher with, you can use the cipher constructor directly.
