@@ -110,7 +110,7 @@ export class Cipher {
         // set encryption key
         this.enkey = enkey;
         this.e = util.bufferToBigInt(enkey);
-        if (!util.isValidKey(this.e)) {
+        if (!util.isValidKey(this.p, this.e)) {
             throw new Error('Cannot create cipher: the encryption key is invalid');
         }
 

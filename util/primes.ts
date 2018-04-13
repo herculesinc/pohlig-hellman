@@ -2,7 +2,7 @@
 // ================================================================================================
 import * as crypto from 'crypto';
 import { BigInteger } from 'jsbn';
-import { bigIntToBuffer, bufferToBigInt } from './biUtil';
+import { bigIntToBuffer, bufferToBigInt } from './converters';
 
 // MODULE VARIABLES
 // ================================================================================================

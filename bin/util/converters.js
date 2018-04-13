@@ -17,4 +17,4 @@ function bigIntToBuffer(bi) {
     return Buffer.from(hex, 'hex');
 }
 exports.bigIntToBuffer = bigIntToBuffer;
-//# sourceMappingURL=biUtil.js.map
+//# sourceMappingURL=converters.js.map

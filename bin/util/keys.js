@@ -1,53 +1,55 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 // IMPORTS
 // ================================================================================================
+const crypto = require("crypto");
 const jsbn_1 = require("jsbn");
-const forge = require("node-forge");
-const biUtil_1 = require("./biUtil");
+const converters_1 = require("./converters");
+// MODULE VARIABLES
+// ================================================================================================
+const MIN_KEY_LENGTH = 16;
+const DEFAULT_KEY_LENGTH = 256;
 // PUBLIC FUNCTION
 // ================================================================================================
-function generateKey(prime, bitLength = 256) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // TODO: validate parameters
-        const randomBytes = Buffer.from(forge.random.getBytesSync(bitLength >> 3));
-        let key = biUtil_1.bufferToBigInt(randomBytes);
-        if (key.isEven()) {
-            key = key.add(jsbn_1.BigInteger.ONE);
-        }
-        return biUtil_1.bigIntToBuffer(key);
-        // return new Promise((resolve, reject) => {
-        //     crypto.randomBytes(byteLength, (error, buf) => {
-        //         if (error) {
-        //             return reject(error);
-        //         }
-        //
-        //         console.log( 'key', buf.toString('hex') )
-        //
-        //         // TODO: make sure a valid key has been generated
-        //
-        //         let key = new BigInteger(buf.toString('hex'), 16);
-        //         if (key.isEven()) {
-        //             key = key.add(ONE);
-        //         }
-        //
-        //         resolve(key);
-        //     });
-        // });
+function generateKey(prime, bitLength) {
+    if (prime === null || prime === undefined) {
+        throw new TypeError('Cannot generate key: prime is undefined');
+    }
+    const primeLength = prime.length * 8;
+    // if key length was not provided, figure out what is appropriate
+    if (bitLength === null || bitLength === undefined) {
+        bitLength = Math.min(DEFAULT_KEY_LENGTH, primeLength / 4);
+    }
+    // validate key length
+    if (typeof bitLength !== 'number') {
+        throw new TypeError('Cannot generate key: bit length is invalid');
+    }
+    else if (bitLength < MIN_KEY_LENGTH) {
+        throw new TypeError('Cannot generate key: key length is too small');
+    }
+    else if (bitLength > (primeLength / 4)) {
+        throw new TypeError('Cannot generate key: key length is too big');
+    }
+    // generate and return the key
+    return new Promise((resolve, reject) => {
+        const byteLength = Math.floor(bitLength / 8);
+        crypto.randomBytes(byteLength, (error, buf) => {
+            if (error) {
+                return reject(error);
+            }
+            let key = converters_1.bufferToBigInt(buf);
+            if (key.isEven()) {
+                key = key.add(jsbn_1.BigInteger.ONE);
+            }
+            resolve(converters_1.bigIntToBuffer(key));
+        });
     });
 }
 exports.generateKey = generateKey;
-function isValidKey(prime) {
-    // TODO: implement
-    return true;
+function isValidKey(prime, key) {
+    const primeLength = prime.bitLength();
+    const keyLength = key.bitLength();
+    return (keyLength >= MIN_KEY_LENGTH && keyLength <= (primeLength / 4));
 }
 exports.isValidKey = isValidKey;
 //# sourceMappingURL=keys.js.map

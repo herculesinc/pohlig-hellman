@@ -31,7 +31,6 @@
     "mocha": "5.0.x"
   },
   "dependencies": {
-    "jsbn": "1.1.X",
-    "node-forge": "0.7.x"
+    "jsbn": "1.1.X"
   }
 }

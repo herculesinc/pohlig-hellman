@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // IMPORTS
 // ================================================================================================
 const crypto = require("crypto");
-const biUtil_1 = require("./biUtil");
+const converters_1 = require("./converters");
 // MODULE VARIABLES
 // ================================================================================================
 const PRIME_CONFIDENCE = 10; // 99.9% confidence that a number is a prime
@@ -38,10 +38,10 @@ function getPrime(modpGroup) {
 exports.getPrime = getPrime;
 function checkPrime(value) {
     if (value === PRIMES.modp2048 || value === PRIMES.modp3072 || value === PRIMES.modp4096 || value === PRIMES.modp6144 || value === PRIMES.modp8192) {
-        return biUtil_1.bufferToBigInt(value);
+        return converters_1.bufferToBigInt(value);
     }
     else {
-        const p = biUtil_1.bufferToBigInt(value);
+        const p = converters_1.bufferToBigInt(value);
         if (p.isProbablePrime(PRIME_CONFIDENCE)) {
             return p;
         }
