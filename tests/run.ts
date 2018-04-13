@@ -1,14 +1,15 @@
 // INTERFACES
 // ================================================================================================
-import * as ph from './../index';
+import * as ph from '../index';
+import { generateSafePrime } from '../util/primes';
 
 // TEST RUNNER
 // ================================================================================================
-test().then(() => { console.log('done!'); });
+testCipher().then(() => { console.log('done!'); });
 
-// TEST FUNCTION
+// TEST FUNCTIONS
 // ================================================================================================
-async function test() {
+async function testCipher() {
     try {
         console.log('-'.repeat(100));
         let start = Date.now();
@@ -51,6 +52,33 @@ async function test() {
         start = Date.now();
         const d12 = c3.decrypt(e2);
         console.log(`Decrypted data in ${Date.now() - start} ms; success: ${d12.toString() === data}`);
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+async function testPrimeGenerator() {
+    try {
+        console.log('-'.repeat(100));
+        let start = Date.now();
+        const p1 = await generateSafePrime(64);
+        console.log(`Generated prime in ${Date.now() - start} ms; legnth ${p1.length * 8}`);
+
+        console.log('-'.repeat(100));
+        start = Date.now();
+        const p2 = await generateSafePrime(512);
+        console.log(`Generated prime in ${Date.now() - start} ms; legnth ${p2.length * 8}`);
+
+        console.log('-'.repeat(100));
+        start = Date.now();
+        const p3 = await generateSafePrime(1024);
+        console.log(`Generated prime in ${Date.now() - start} ms; legnth ${p3.length * 8}`);
+
+        console.log('-'.repeat(100));
+        start = Date.now();
+        const p4 = await generateSafePrime(2048);
+        console.log(`Generated prime in ${Date.now() - start} ms; legnth ${p4.length * 8}`);
+
     } catch (e) {
         console.log(e)
     }

@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// IMPORTS
+// ================================================================================================
+const jsbn_1 = require("jsbn");
 const forge = require("node-forge");
 const biUtil_1 = require("./biUtil");
 // PUBLIC FUNCTION
@@ -18,7 +21,7 @@ function generateKey(prime, bitLength = 256) {
         const randomBytes = Buffer.from(forge.random.getBytesSync(bitLength >> 3));
         let key = biUtil_1.bufferToBigInt(randomBytes);
         if (key.isEven()) {
-            key = key.add(biUtil_1.BIG_INT_ONE);
+            key = key.add(jsbn_1.BigInteger.ONE);
         }
         return biUtil_1.bigIntToBuffer(key);
         // return new Promise((resolve, reject) => {

@@ -1,8 +1,12 @@
 // IMPORTS
 // ================================================================================================
-import * as forge from 'node-forge';
-import {bigIntToBuffer, bufferToBigInt, BIG_INT_ONE, BIG_INT_TWO} from './biUtil';
+import * as crypto from 'crypto';
 import { BigInteger } from 'jsbn';
+import { bigIntToBuffer, bufferToBigInt } from './biUtil';
+
+// MODULE VARIABLES
+// ================================================================================================
+const PRIME_CONFIDENCE = 10;    // 99.9% confidence that a number is a prime
 
 // INTERFACES
 // ================================================================================================
@@ -10,31 +14,10 @@ export type ModpGroup = 'modp2048' | 'modp3072' | 'modp4096' | 'modp6144' | 'mod
 
 // PUBLIC FUNCTIONS
 // ================================================================================================
-export function generateProbablePrime(bits: number): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-        forge.prime.generateProbablePrime(bits, (err, num) => {
-            if (err) return reject(err);
-
-            resolve(bigIntToBuffer(num));
-        });
-    });
-}
-
-export async function generateSafePrime(bits: number): Promise<Buffer> {
-    let safePrime, isSafe;
-
-    while (!isSafe) {
-        const pb = await generateProbablePrime(bits);
-
-        safePrime = bufferToBigInt(pb);
-
-        isSafe = safePrime
-            .subtract(BIG_INT_ONE)
-            .divide(BIG_INT_TWO)
-            .isProbablePrime();
-    }
-
-    return safePrime;
+export async function generateSafePrime(bitLength: number): Promise<Buffer> {
+    // use built-in Diffie-Hellman class to generate safe prime
+    const dh = crypto.createDiffieHellman(bitLength);
+    return dh.getPrime();
 }
 
 export function getPrime(modpGroup: ModpGroup): Buffer {
@@ -50,9 +33,16 @@ export function getPrime(modpGroup: ModpGroup): Buffer {
     return prime;
 }
 
-export function isPrime(value: BigInteger): boolean {
-    // TODO: implement
-    return true;
+export function checkPrime(value: Buffer): BigInteger {
+    if (value === PRIMES.modp2048 || value === PRIMES.modp3072 || value === PRIMES.modp4096 || value === PRIMES.modp6144 || value === PRIMES.modp8192) {
+        return bufferToBigInt(value);
+    }
+    else {
+        const p = bufferToBigInt(value);
+        if (p.isProbablePrime(PRIME_CONFIDENCE)) {
+            return p;
+        }
+    }
 }
 
 // PRIMES

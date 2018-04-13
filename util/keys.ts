@@ -2,7 +2,7 @@
 // ================================================================================================
 import { BigInteger } from 'jsbn';
 import * as forge from 'node-forge';
-import {bigIntToBuffer, bufferToBigInt, BIG_INT_ONE} from './biUtil';
+import {bigIntToBuffer, bufferToBigInt} from './biUtil';
 
 // PUBLIC FUNCTION
 // ================================================================================================
@@ -14,7 +14,7 @@ export async function generateKey(prime: Buffer, bitLength = 256): Promise<Buffe
     let key = bufferToBigInt(randomBytes);
 
     if (key.isEven()) {
-        key = key.add(BIG_INT_ONE);
+        key = key.add(BigInteger.ONE);
     }
 
     return bigIntToBuffer(key);

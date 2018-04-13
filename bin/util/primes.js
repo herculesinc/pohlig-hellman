@@ -10,32 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 // IMPORTS
 // ================================================================================================
-const forge = require("node-forge");
+const crypto = require("crypto");
 const biUtil_1 = require("./biUtil");
+// MODULE VARIABLES
+// ================================================================================================
+const PRIME_CONFIDENCE = 10; // 99.9% confidence that a number is a prime
 // PUBLIC FUNCTIONS
 // ================================================================================================
-function generateProbablePrime(bits) {
-    return new Promise((resolve, reject) => {
-        forge.prime.generateProbablePrime(bits, (err, num) => {
-            if (err)
-                return reject(err);
-            resolve(biUtil_1.bigIntToBuffer(num));
-        });
-    });
-}
-exports.generateProbablePrime = generateProbablePrime;
-function generateSafePrime(bits) {
+function generateSafePrime(bitLength) {
     return __awaiter(this, void 0, void 0, function* () {
-        let safePrime, isSafe;
-        while (!isSafe) {
-            const pb = yield generateProbablePrime(bits);
-            safePrime = biUtil_1.bufferToBigInt(pb);
-            isSafe = safePrime
-                .subtract(biUtil_1.BIG_INT_ONE)
-                .divide(biUtil_1.BIG_INT_TWO)
-                .isProbablePrime();
-        }
-        return safePrime;
+        // use built-in Diffie-Hellman class to generate safe prime
+        const dh = crypto.createDiffieHellman(bitLength);
+        return dh.getPrime();
     });
 }
 exports.generateSafePrime = generateSafePrime;
@@ -50,11 +36,18 @@ function getPrime(modpGroup) {
     return prime;
 }
 exports.getPrime = getPrime;
-function isPrime(value) {
-    // TODO: implement
-    return true;
+function checkPrime(value) {
+    if (value === PRIMES.modp2048 || value === PRIMES.modp3072 || value === PRIMES.modp4096 || value === PRIMES.modp6144 || value === PRIMES.modp8192) {
+        return biUtil_1.bufferToBigInt(value);
+    }
+    else {
+        const p = biUtil_1.bufferToBigInt(value);
+        if (p.isProbablePrime(PRIME_CONFIDENCE)) {
+            return p;
+        }
+    }
 }
-exports.isPrime = isPrime;
+exports.checkPrime = checkPrime;
 // PRIMES
 // ================================================================================================
 const PRIMES = {

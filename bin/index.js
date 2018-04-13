@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// IMPORTS
+// ================================================================================================
+const jsbn_1 = require("jsbn");
 const util = require("./util");
 // MODULE VARIABLES
 // ================================================================================================
@@ -77,8 +80,8 @@ class Cipher {
         }
         // set prime
         this.prime = prime;
-        this.p = util.bufferToBigInt(prime);
-        if (!util.isPrime(this.p)) {
+        this.p = util.checkPrime(this.prime);
+        if (!this.p) {
             throw new TypeError('Cannot create cipher: prime is not a prime');
         }
         else if (this.p.bitLength() < SECURE_PRIME_LENGTH) {
@@ -91,7 +94,7 @@ class Cipher {
             throw new Error('Cannot create cipher: the encryption key is invalid');
         }
         // calculate and set decryption key
-        this.d = this.e.modInverse(this.p.subtract(util.BIG_INT_ONE));
+        this.d = this.e.modInverse(this.p.subtract(jsbn_1.BigInteger.ONE));
         this.dekey = util.bigIntToBuffer(this.d);
     }
     // PUBLIC FUNCTIONS
