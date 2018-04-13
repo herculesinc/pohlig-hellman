@@ -17,7 +17,7 @@ gulp.task( 'clean', cb => {
 } );
 
 gulp.task( 'copy:files', () => {
-    return gulp.src( [ './package.json', './README.md', 'pohlig-hellman.d.ts' ], { base: '.' } )
+    return gulp.src( [ './package.json', './README.md', './pohlig-hellman.d.ts' ], { base: '.' } )
         .pipe( gulp.dest( './bin' ) );
 } );
 
