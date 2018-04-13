@@ -9,7 +9,7 @@
     "encrypt"
   ],
   "main": "index.js",
-  "typings": "pholig-hellman.d.ts",
+  "typings": "pohlig-hellman.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/herculesinc/pohlig-hellman.git/"
