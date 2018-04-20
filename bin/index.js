@@ -38,14 +38,14 @@ exports.createCipher = createCipher;
 function mergeKeys(key1, key2) {
     // validate key1
     if (key1 === undefined || key1 === null) {
-        throw new TypeError('Cannot merge keys: key1 is undefined');
+        throw new TypeError(`Cannot merge keys: key1 is ${key1}`);
     }
     else if (!Buffer.isBuffer(key1)) {
         throw new TypeError('Cannot merge keys: key1 is invalid');
     }
     // validate key2
     if (key2 === undefined || key2 === null) {
-        throw new TypeError('Cannot merge keys: key2 is undefined');
+        throw new TypeError(`Cannot merge keys: key2 is ${key2}`);
     }
     else if (!Buffer.isBuffer(key2)) {
         throw new TypeError('Cannot merge keys: key2 is invalid');
@@ -66,14 +66,14 @@ class Cipher {
     constructor(prime, enkey) {
         // validate prime parameter
         if (prime === undefined || prime === null) {
-            throw new TypeError('Cannot create cipher: prime is undefined');
+            throw new TypeError(`Cannot create cipher: prime is ${prime}`);
         }
         else if (!Buffer.isBuffer(prime)) {
             throw new TypeError('Cannot create cipher: prime is invalid');
         }
         // validate enkey parameter
         if (enkey === undefined || enkey === null) {
-            throw new TypeError('Cannot create cipher: enkey is undefined');
+            throw new TypeError(`Cannot create cipher: enkey is ${enkey}`);
         }
         else if (!Buffer.isBuffer(enkey)) {
             throw new TypeError('Cannot create cipher: enkey is invalid');
@@ -101,7 +101,7 @@ class Cipher {
     // --------------------------------------------------------------------------------------------
     encrypt(data, encoding) {
         if (data === undefined || data === null) {
-            throw new TypeError('Cannot encrypt: data is undefiend');
+            throw new TypeError(`Cannot encrypt: data is ${data}`);
         }
         // prepare the data
         let buf;
@@ -129,7 +129,7 @@ class Cipher {
     }
     decrypt(data, encoding) {
         if (data === undefined || data === null) {
-            throw new TypeError('Cannot decrypt: data is undefiend');
+            throw new TypeError(`Cannot decrypt: data is ${data}`);
         }
         // prepare the data
         let buf;
