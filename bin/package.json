@@ -1,6 +1,6 @@
 {
   "name": "pohlig-hellman",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pohlig-Hellman cipher for Node.js",
   "keywords": [
     "pohlig",

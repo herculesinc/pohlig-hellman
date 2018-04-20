@@ -104,7 +104,7 @@ describe('tests;', () => {
             });
 
             it(`new Cipher(wrongPrime, key);`, () => {
-                expect(() => new Cipher(Buffer.from([]), key1)).to.throw(TypeError, 'Cannot create cipher: prime is not a prime');
+                expect(() => new Cipher(Buffer.from([0x64]), key1)).to.throw(TypeError, 'Cannot create cipher: prime is not a prime');
             });
         });
 
@@ -138,11 +138,11 @@ describe('tests;', () => {
                 {data: null, error: 'data is null'},
                 {data: undef, error: 'data is undefined'},
                 {data: 100},
-                {data: '', type: 'emptyString'},
+                {data: '', type: 'emptyString', error: 'data is an empty string'},
                 {data: [prime], type: 'Array'},
                 {data: {prime}, type: 'Object'},
                 {data: formBufferWithBitLength(3000), type: 'largeBufferData', error: 'data is too large'},
-                {data: formStringWithBitLength(3000), type: 'largeStringData', error: 'data is too large'}
+                {data: formStringWithBitLength(3000, 'utf8'), type: 'largeStringData', error: 'data is too large'}
             ].forEach(({data, type, error = 'data is invalid'}) => {
                 it(`Cipher.encrypt(${type || data});`, () => {
                     expect(() => c1.encrypt(data)).to.throw(TypeError, `Cannot encrypt: ${error}`);
@@ -168,11 +168,11 @@ describe('tests;', () => {
                 {data: null, error: 'data is null'},
                 {data: undef, error: 'data is undefined'},
                 {data: 100},
-                {data: '', type: 'emptyString'},
+                {data: '', type: 'emptyString', error: 'data is an empty string'},
                 {data: [prime], type: 'Array'},
                 {data: {prime}, type: 'Object'},
                 {data: formBufferWithBitLength(3000), type: 'largeBufferData', error: 'data is too large'},
-                {data: formStringWithBitLength(3000), type: 'largeStringData', error: 'data is too large'}
+                {data: formStringWithBitLength(3000, 'hex'), type: 'largeStringData', error: 'data is too large'}
             ].forEach(({data, type, error = 'data is invalid'}) => {
                 it(`Cipher.decrypt(${type || data});`, () => {
                     expect(() => c1.decrypt(data)).to.throw(TypeError, `Cannot decrypt: ${error}`);
@@ -219,11 +219,11 @@ describe('tests;', () => {
                 {param: '', type: 'emptyString', error: 'Cannot get prime: modpGroup \'\' is invalid'},
                 {param: 'abcde', error: 'Cannot get prime: modpGroup \'abcde\' is invalid'},
                 {param: '2048', error: 'Cannot get prime: modpGroup \'2048\' is invalid'},
-                {param: 0, error: 'todo'},
-                {param: -1024, error: 'todo'},
-                {param: [], type: 'Array', error: 'todo'},
-                {param: {}, type: 'Object', error: 'todo'},
-                {param: Buffer.from(''), type: 'emptyBuffer', error: 'Cannot generate key: key length is too small'}
+                {param: 0, error: 'Cannot create cipher: prime length is too small'},
+                {param: -1024, error: 'Cannot create cipher: prime length is too small'},
+                {param: [], type: 'Array', error: 'Cannot create cipher: prime is invalid'},
+                {param: {}, type: 'Object', error: 'Cannot create cipher: prime is invalid'},
+                {param: Buffer.from(''), type: 'emptyBuffer', error: 'Cannot create cipher: prime is invalid'}
             ].forEach(({param, type, error}) => {
                 it(`createCipher(${type || param});`, done => {
                     createCipher(param as any)
@@ -248,6 +248,6 @@ function formBufferWithBitLength(bitLength: number): Buffer {
     return Buffer.alloc(bitLength >> 3, 'a', 'utf8');
 }
 
-function formStringWithBitLength(bitLength: number): string {
-    return formBufferWithBitLength(bitLength).toString();
+function formStringWithBitLength(bitLength: number, encoding: 'hex' | 'utf8'): string {
+    return formBufferWithBitLength(bitLength).toString(encoding);
 }

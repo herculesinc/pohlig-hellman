@@ -6,6 +6,7 @@ import * as util from './util';
 // MODULE VARIABLES
 // ================================================================================================
 const SECURE_PRIME_LENGTH = 2048;
+const MIN_PRIME_LENGTH = 4;     // min allowed bit length for the prime
 
 // INTERFACES
 // ================================================================================================
@@ -26,6 +27,9 @@ export async function createCipher(groupPrimeOrLength?: ModpGroup | Buffer | num
         prime = groupPrimeOrLength;
     }
     if (typeof groupPrimeOrLength === 'number') {
+        if (groupPrimeOrLength < MIN_PRIME_LENGTH) {
+            throw new TypeError('Cannot create cipher: prime length is too small');
+        }
         prime = await util.generateSafePrime(groupPrimeOrLength);
     }
     else if (typeof groupPrimeOrLength === 'string') {
@@ -33,6 +37,9 @@ export async function createCipher(groupPrimeOrLength?: ModpGroup | Buffer | num
     }
     else if (groupPrimeOrLength === null || groupPrimeOrLength === undefined) {
         prime = util.getPrime('modp2048');
+    }
+    else {
+        throw new TypeError('Cannot create cipher: prime is invalid');
     }
 
     const key = await util.generateKey(prime);
@@ -48,12 +55,18 @@ export function mergeKeys(key1: Buffer, key2: Buffer): Buffer {
     else if (!Buffer.isBuffer(key1)) {
         throw new TypeError('Cannot merge keys: key1 is invalid');
     }
+    else if (key1.byteLength === 0) {
+        throw new TypeError('Cannot merge keys: key1 is invalid');
+    }
 
     // validate key2
     if (key2 === undefined || key2 === null) {
         throw new TypeError(`Cannot merge keys: key2 is ${key2}`);
     }
     else if (!Buffer.isBuffer(key2)) {
+        throw new TypeError('Cannot merge keys: key2 is invalid');
+    }
+    else if (key2.byteLength === 0) {
         throw new TypeError('Cannot merge keys: key2 is invalid');
     }
 
@@ -104,6 +117,9 @@ export class Cipher {
             throw new TypeError('Cannot create cipher: prime is not a prime');
         }
         else if (this.p.bitLength() < SECURE_PRIME_LENGTH) {
+            if (this.p.bitLength() < MIN_PRIME_LENGTH) {
+                throw new TypeError('Cannot create cipher: prime is too small');
+            }
             console.warn('The prime you are using is too small for secure encryption');
         }
 
@@ -125,6 +141,9 @@ export class Cipher {
         if (data === undefined || data === null) {
             throw new TypeError(`Cannot encrypt: data is ${data}`);
         }
+        else if (data === '') {
+            throw new TypeError(`Cannot encrypt: data is an empty string`);
+        }
 
         // prepare the data
         let buf: Buffer;
@@ -132,7 +151,10 @@ export class Cipher {
             buf = data;
         }
         else if (typeof data === 'string') {
-            encoding = encoding || 'utf8';
+            if (encoding === undefined) {
+                encoding = 'utf8';
+            }
+            
             if (encoding !== 'utf8' && encoding !== 'hex' && encoding !== 'base64') {
                 throw new TypeError('Cannot encrypt: encoding is invalid');
             }
@@ -164,7 +186,14 @@ export class Cipher {
             buf = data;
         }
         else if (typeof data === 'string') {
-            encoding = encoding || 'hex';
+            if (data === '') {
+                throw new TypeError(`Cannot decrypt: data is an empty string`);
+            }
+
+            if (encoding === undefined) {
+                encoding = 'hex';
+            }
+            
             if (encoding !== 'hex' && encoding !== 'base64') {
                 throw new TypeError('Cannot decrypt: encoding is invalid');
             }
@@ -174,8 +203,13 @@ export class Cipher {
             throw new TypeError('Cannot decrypt: data is invalid');
         }
 
-        // decrypt and return the buffer
+        // convert buffer to bigint and check the size
         const c = util.bufferToBigInt(buf);
+        if (c.bitLength() > this.p.bitLength()) {
+            throw new TypeError('Cannot decrypt: data is too large');
+        }
+
+        // decrypt and return the buffer
         const m = c.modPow(this.d, this.p);
         return util.bigIntToBuffer(m);
     }
