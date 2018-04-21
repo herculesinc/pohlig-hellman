@@ -1,4 +1,4 @@
-declare module "pholig-hellman" {
+declare module "pohlig-hellman" {
 
     // enums
     export type ModpGroup = 'modp2048' | 'modp3072' | 'modp4096' | 'modp6144' | 'modp8192';
@@ -13,6 +13,7 @@ declare module "pholig-hellman" {
 
     export function mergeKeys(k1: Buffer, k2: Buffer)   : Buffer;
 
+    // Cipher class definition
     export class Cipher {
 
         constructor(prime: Buffer, enkey: Buffer);

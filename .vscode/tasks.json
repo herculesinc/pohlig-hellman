@@ -22,6 +22,11 @@
                 "isDefault": true
             },
             "problemMatcher": [ "$tsc" ]
+        },
+        {
+            "type": "gulp",
+            "task": "publish",
+            "problemMatcher": [ "$tsc" ]
         }
     ]
 }

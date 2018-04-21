@@ -26,7 +26,7 @@ export async function createCipher(groupPrimeOrLength?: ModpGroup | Buffer | num
     if (Buffer.isBuffer(groupPrimeOrLength)) {
         prime = groupPrimeOrLength;
     }
-    if (typeof groupPrimeOrLength === 'number') {
+    else if (typeof groupPrimeOrLength === 'number') {
         if (groupPrimeOrLength < MIN_PRIME_LENGTH) {
             throw new TypeError('Cannot create cipher: prime length is too small');
         }
