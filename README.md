@@ -1,6 +1,6 @@
 # pohlig-hellman
 
-Pohlig-Hellman cipher for for node.js written in TypeScript.
+Pohlig-Hellman cipher for node.js written in TypeScript.
 
 ## Install
 ```sh
